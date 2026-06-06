@@ -1,0 +1,8 @@
+src/
+example/
+.vscode/
+.idea/
+node_modules/
+*.log
+README.md
+!dist/

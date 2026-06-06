@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-lead-widget",
+  "version": "0.1.0",
+  "description": "Lightweight framework-agnostic WhatsApp lead capture widget as a Web Component.",
+  "type": "module",
+  "keywords": ["whatsapp", "widget", "web-component", "lead-capture"],
+  "license": "MIT",
+  "author": "",
+  "main": "dist/whatsapp-lead-widget.js",
+  "module": "dist/whatsapp-lead-widget.js",
+  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "build": "node ./scripts/build.js",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}
