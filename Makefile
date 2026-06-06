@@ -15,9 +15,10 @@ version-patch:
 
 version-major:
 	@bun pm version major
-	
+
 
 push:
 	@git add .
 	@git commit -m "Update"
 	@git push origin main
+
