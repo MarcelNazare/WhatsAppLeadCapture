@@ -23,67 +23,79 @@ class WhatsAppWidget extends HTMLElement {
     const wrapper = document.createElement('div');
 
     wrapper.innerHTML = `
-      <style>
-        :host{all:initial}
-        .btn-wrap{position:fixed;z-index:9999;bottom:20px;right:20px}
-        :host([position="left"]) .btn-wrap{left:20px;right:auto}
-        button.fab{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:none;box-shadow:0 6px 18px rgba(0,0,0,0.12);cursor:pointer;font-weight:600;color:#fff;background:#25D366}
-        button.fab:focus{outline:2px solid rgba(0,0,0,0.12)}
-        .icon{width:20px;height:20px;display:inline-block}
+<div class="fixed bottom-5 right-5 z-[9999]">
+  <button 
+    class="flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-white bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 shadow-lg shadow-green-500/20 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200" 
+    part="button" 
+    aria-haspopup="dialog" 
+    aria-label="Open chat"
+  >
+    <span class="text-sm tracking-wide">Chat</span>
+  </button>
+</div>
 
-        .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:10000}
-        .overlay.open{display:flex}
-        .modal{width:clamp(280px,90vw,420px);background:#fff;border-radius:12px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,0.2);transform:translateY(12px);opacity:0;transition:all 220ms cubic-bezier(.2,.9,.3,1)}
-        .overlay.open .modal{transform:translateY(0);opacity:1}
-        .modal header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-        .modal h2{font-size:16px;margin:0}
-        .close{background:transparent;border:none;font-size:20px;cursor:pointer}
-
-        form{display:grid;gap:8px}
-        input, textarea{width:100%;padding:10px;border:1px solid #e6e6e6;border-radius:8px;font-size:14px}
-        textarea{min-height:80px;resize:vertical}
-        .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
-        .actions button{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-        .primary{color:#fff;background:var(--wa-color,#25D366)}
-        .secondary{background:#f1f1f1}
-
-        @media (prefers-reduced-motion:reduce){
-          .modal{transition:none}
-        }
-      </style>
-
-      <div class="btn-wrap">
-        <button class="fab" part="button" aria-haspopup="dialog" aria-label="Open chat">
-          <span class="btn-text">Chat</span>
+<div class="hidden fixed inset-0 z-[10000] bg-slate-900/40 backdrop-blur-sm items-center justify-center p-4 transition-all duration-300" role="dialog" aria-modal="true" aria-hidden="true">
+  
+  <div class="w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl border border-slate-100 opacity-0 translate-y-4 motion-safe:transition-all motion-safe:duration-300 transform" role="document">
+    
+    <header class="flex items-center justify-between mb-5">
+      <h2 class="text-lg font-bold text-slate-800 tracking-tight">Message</h2>
+      <button class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-50 text-lg leading-none" aria-label="Close">✕</button>
+    </header>
+    
+    <form class="grid gap-4" novalidate>
+      <label class="block">
+        <span class="sr-only">Name (required)</span>
+        <input 
+          type="text"
+          name="name" 
+          required 
+          placeholder="Your name" 
+          aria-label="Your name"
+          class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all"
+        >
+      </label>
+      
+      <label class="block">
+        <span class="sr-only">Phone (optional)</span>
+        <input 
+          type="text"
+          name="phone" 
+          inputmode="tel" 
+          placeholder="Phone number (optional)" 
+          aria-label="Phone number"
+          class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all"
+        >
+      </label>
+      
+      <label class="block">
+        <span class="sr-only">Message (required)</span>
+        <textarea 
+          name="message" 
+          required 
+          placeholder="Your message" 
+          aria-label="Message"
+          class="w-full px-3.5 py-2.5 min-h-[90px] max-h-[200px] border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all resize-y"
+        ></textarea>
+      </label>
+      
+      <div class="flex gap-2 justify-end mt-2">
+        <button 
+          type="button" 
+          class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200/80 active:bg-slate-200 rounded-xl transition-colors cancel"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="px-5 py-2 text-sm font-semibold text-white bg-[#25D366] hover:bg-[#20ba5a] active:scale-[0.98] rounded-xl shadow-md shadow-green-500/10 transition-all send"
+        >
+          Send
         </button>
       </div>
-
-      <div class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="modal" role="document">
-          <header>
-            <h2 class="title">Message</h2>
-            <button class="close" aria-label="Close">✕</button>
-          </header>
-          <form novalidate>
-            <label>
-              <span class="sr">Name (required)</span>
-              <input name="name" required placeholder="Your name" aria-label="Your name">
-            </label>
-            <label>
-              <span class="sr">Phone (optional)</span>
-              <input name="phone" inputmode="tel" placeholder="Phone number (optional)" aria-label="Phone number">
-            </label>
-            <label>
-              <span class="sr">Message (required)</span>
-              <textarea name="message" required placeholder="Your message" aria-label="Message"></textarea>
-            </label>
-            <div class="actions">
-              <button type="button" class="secondary cancel">Cancel</button>
-              <button type="submit" class="primary send">Send</button>
-            </div>
-          </form>
-        </div>
-      </div>
+    </form>
+  </div>
+</div>
     `;
 
     shadow.appendChild(wrapper);
